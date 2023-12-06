@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DbİsTakipModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DbİsTakipModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="TblAdmin">
           <Key>
             <PropertyRef Name="ID" />
@@ -24,6 +24,16 @@
           <Property Name="Durum" Type="bit" />
           <Property Name="Tarih" Type="date" />
         </EntityType>
+        <EntityType Name="TblCagriDetay">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cagri" Type="int" />
+          <Property Name="aciklama" Type="nvarchar(max)" />
+          <Property Name="tarih" Type="date" />
+          <Property Name="saat" Type="char" MaxLength="5" />
+        </EntityType>
         <EntityType Name="TblDepartmanlar">
           <Key>
             <PropertyRef Name="ID" />
@@ -40,6 +50,7 @@
           <Property Name="Yetkili" Type="nvarchar" MaxLength="50" />
           <Property Name="Telefon" Type="nvarchar" MaxLength="50" />
           <Property Name="Mail" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sifre" Type="nvarchar" MaxLength="20" />
           <Property Name="Sektor" Type="nvarchar" MaxLength="50" />
           <Property Name="il" Type="nvarchar" MaxLength="50" />
           <Property Name="ilçe" Type="nvarchar" MaxLength="50" />
@@ -88,6 +99,18 @@
             </Principal>
             <Dependent Role="TblCagri">
               <PropertyRef Name="CagriFirma" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TblCagriDetay_TblCagri1">
+          <End Role="TblCagri" Type="Self.TblCagri" Multiplicity="0..1" />
+          <End Role="TblCagriDetay" Type="Self.TblCagriDetay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblCagri">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TblCagriDetay">
+              <PropertyRef Name="cagri" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -142,6 +165,7 @@
         <EntityContainer Name="DbİsTakipModelStoreContainer">
           <EntitySet Name="TblAdmin" EntityType="Self.TblAdmin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblCagri" EntityType="Self.TblCagri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblCagriDetay" EntityType="Self.TblCagriDetay" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblDepartmanlar" EntityType="Self.TblDepartmanlar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblFirmalar" EntityType="Self.TblFirmalar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblGorevDetaylar" EntityType="Self.TblGorevDetaylar" Schema="dbo" store:Type="Tables" />
@@ -150,6 +174,10 @@
           <AssociationSet Name="FK_TblCagri_TblFirmalar" Association="Self.FK_TblCagri_TblFirmalar">
             <End Role="TblFirmalar" EntitySet="TblFirmalar" />
             <End Role="TblCagri" EntitySet="TblCagri" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TblCagriDetay_TblCagri1" Association="Self.FK_TblCagriDetay_TblCagri1">
+            <End Role="TblCagri" EntitySet="TblCagri" />
+            <End Role="TblCagriDetay" EntitySet="TblCagriDetay" />
           </AssociationSet>
           <AssociationSet Name="FK_TblGorevDetaylar_TblGorevler" Association="Self.FK_TblGorevDetaylar_TblGorevler">
             <End Role="TblGorevler" EntitySet="TblGorevler" />
@@ -168,8 +196,7 @@
             <End Role="TblPersonel" EntitySet="TblPersonel" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DbİsTakipModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -192,6 +219,7 @@
           <Property Name="Durum" Type="Boolean" />
           <Property Name="Tarih" Type="DateTime" Precision="0" />
           <NavigationProperty Name="TblFirmalar" Relationship="Self.FK_TblCagri_TblFirmalar" FromRole="TblCagri" ToRole="TblFirmalar" />
+          <NavigationProperty Name="TblCagriDetay" Relationship="DbİsTakipModel.FK_TblCagriDetay_TblCagri1" FromRole="TblCagri" ToRole="TblCagriDetay" />
         </EntityType>
         <EntityType Name="TblDepartmanlar">
           <Key>
@@ -215,6 +243,7 @@
           <Property Name="ilçe" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Adres" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TblCagri" Relationship="Self.FK_TblCagri_TblFirmalar" FromRole="TblFirmalar" ToRole="TblCagri" />
+          <Property Name="Sifre" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TblGorevDetaylar">
           <Key>
@@ -345,7 +374,35 @@
             <End Role="TblPersonel" EntitySet="TblPersonel" />
             <End Role="TblGorevler" EntitySet="TblGorevler" />
           </AssociationSet>
+          <EntitySet Name="TblCagriDetay" EntityType="DbİsTakipModel.TblCagriDetay" />
+          <AssociationSet Name="FK_TblCagriDetay_TblCagri1" Association="DbİsTakipModel.FK_TblCagriDetay_TblCagri1">
+            <End Role="TblCagri" EntitySet="TblCagri" />
+            <End Role="TblCagriDetay" EntitySet="TblCagriDetay" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="TblCagriDetay">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cagri" Type="Int32" />
+          <Property Name="aciklama" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="tarih" Type="DateTime" Precision="0" />
+          <Property Name="saat" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="TblCagri" Relationship="DbİsTakipModel.FK_TblCagriDetay_TblCagri1" FromRole="TblCagriDetay" ToRole="TblCagri" />
+        </EntityType>
+        <Association Name="FK_TblCagriDetay_TblCagri1">
+          <End Type="DbİsTakipModel.TblCagri" Role="TblCagri" Multiplicity="0..1" />
+          <End Type="DbİsTakipModel.TblCagriDetay" Role="TblCagriDetay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblCagri">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TblCagriDetay">
+              <PropertyRef Name="cagri" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -384,6 +441,7 @@
           <EntitySetMapping Name="TblFirmalar">
             <EntityTypeMapping TypeName="DbİsTakipModel.TblFirmalar">
               <MappingFragment StoreEntitySet="TblFirmalar">
+                <ScalarProperty Name="Sifre" ColumnName="Sifre" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Ad" ColumnName="Ad" />
                 <ScalarProperty Name="Yetkili" ColumnName="Yetkili" />
@@ -430,6 +488,17 @@
                 <ScalarProperty Name="Gorsel" ColumnName="Gorsel" />
                 <ScalarProperty Name="Departman" ColumnName="Departman" />
                 <ScalarProperty Name="Durum" ColumnName="Durum" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblCagriDetay">
+            <EntityTypeMapping TypeName="DbİsTakipModel.TblCagriDetay">
+              <MappingFragment StoreEntitySet="TblCagriDetay">
+                <ScalarProperty Name="saat" ColumnName="saat" />
+                <ScalarProperty Name="tarih" ColumnName="tarih" />
+                <ScalarProperty Name="aciklama" ColumnName="aciklama" />
+                <ScalarProperty Name="cagri" ColumnName="cagri" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

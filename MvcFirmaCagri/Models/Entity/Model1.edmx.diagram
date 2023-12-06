@@ -17,6 +17,8 @@
         <AssociationConnector Association="DbİsTakipModel.FK_TblGorevDetaylar_TblGorevler" ManuallyRouted="false" />
         <AssociationConnector Association="DbİsTakipModel.FK_TblGorevler_TblPersonel" ManuallyRouted="false" />
         <AssociationConnector Association="DbİsTakipModel.FK_TblGorevler_TblPersonel1" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DbİsTakipModel.TblCagriDetay" Width="1.5" PointX="5.25" PointY="7.5" />
+        <AssociationConnector Association="DbİsTakipModel.FK_TblCagriDetay_TblCagri1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
