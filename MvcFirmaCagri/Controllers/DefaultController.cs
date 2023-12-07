@@ -71,7 +71,14 @@ namespace MvcFirmaCagri.Controllers
             return RedirectToAction("AktifCagrilar");
 
                 }
-
+        [HttpGet]
+        public ActionResult ProfilDuzenle()
+        {
+            var mail = (string)Session["Mail"];
+            var id = db.TblFirmalar.Where(x => x.Mail == mail).Select(y => y.ID).FirstOrDefault();
+            var profil = db.TblFirmalar.Where(x=>x.ID==id).FirstOrDefault();
+            return View("ProfilDuzenle",profil);
+        }
 
     }
 }
