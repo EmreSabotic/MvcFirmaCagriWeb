@@ -80,5 +80,31 @@ namespace MvcFirmaCagri.Controllers
             return View("ProfilDuzenle",profil);
         }
 
+        public ActionResult AnaSayfa()
+        {
+            var mail = (string)Session["Mail"];
+            var id = db.TblFirmalar.Where(x => x.Mail == mail).Select(y => y.ID).FirstOrDefault();
+            var toplamcagri=db.TblCagri.Where(x=>x.CagriFirma==id).Count();
+            var aktifcagri=db.TblCagri.Where(x=>x.CagriFirma==id && x.Durum==true).Count();
+            var pasifcagri=db.TblCagri.Where(x=>x.CagriFirma==id && x.Durum==false).Count();
+            var yetkili = db.TblFirmalar.Where(x=>x.ID==id).Select(y => y.Yetkili).FirstOrDefault();
+            var sektor = db.TblFirmalar.Where(x=>x.ID==id).Select(y => y.Sektor).FirstOrDefault();
+          
+            ViewBag.c1 = toplamcagri;
+            ViewBag.c2 = aktifcagri;
+            ViewBag.c3 = pasifcagri;
+            ViewBag.c4 = yetkili;
+            ViewBag.c5 = sektor;
+
+            return View();
+        }
+        public PartialViewResult Partial1()
+        {
+            var mail = (string)Session["Mail"];
+            var mesajlar = db.tblMesajlar.Where(x => x.Alici == mail && x.Durum==true).ToList();
+            var mesajsayisi = db.tblMesajlar.Where(x=>x.Alici == mail && x.Durum==true).Count();
+            ViewBag.m1 = mesajsayisi;
+            return PartialView(mesajlar);
+        }
     }
 }
