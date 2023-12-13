@@ -106,5 +106,14 @@ namespace MvcFirmaCagri.Controllers
             ViewBag.m1 = mesajsayisi;
             return PartialView(mesajlar);
         }
+        public PartialViewResult Partial2()
+        {
+
+            var mail = (string)Session["Mail"];
+            var id = db.TblFirmalar.Where(x => x.Mail == mail).Select(y => y.ID).FirstOrDefault();
+
+            var cagrilar = db.TblCagri.Where(x => x.CagriFirma == id).ToList();
+            return PartialView(cagrilar);
+        }
     }
 }
